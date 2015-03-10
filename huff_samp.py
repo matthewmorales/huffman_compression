@@ -4,9 +4,8 @@ import sys
 import array
 import binascii
 
-def encode(symb2freq):
-    """Huffman encode the given dict mapping symbols to weights"""
-    heap = [[wt, [sym, ""]] for sym, wt in symb2freq.items()]
+def encode(charquantity):
+    heap = [[weight, [character, ""]] for character, weight in charquantity.items()]
     heapify(heap)
     while len(heap) > 1:
         lo = heappop(heap)
@@ -22,19 +21,19 @@ text_file = open("ascii.txt","r")
 text = text_file.read()
 text_file.close()
 
-symb2freq = defaultdict(int)
+charquantity = defaultdict(int)
 for ch in text:
-    symb2freq[ch] += 1
-# in Python 3.1+:
-# symb2freq = collections.Counter(txt)
-huff = encode(symb2freq)
+    charquantity[ch] += 1
+
+huff = encode(charquantity)
 print "Symbol\tWeight\tHuffman Code"
-for p in huff:
-    print "%s\t%s\t%s" % (p[0], symb2freq[p[0]], p[1])
+for entry in huff:
+    print "%s\t%s\t%s" % (entry[0], charquantity[entry[0]], entry[1])
+print "****************************\n"
 
 
-def compress(target):
-    print('Generating ascii_compressed.bin') 
+def compress():
+    print('Generating ascii_compressed.txt\n') 
     comp_text = ""
     append_count = 0
     byte_split =""
@@ -48,7 +47,6 @@ def compress(target):
         for p in huff:
             file.write("%s-%s;" % (p[0], p[1]))
         file.write("HUFFMANCOMPRESSIONHEADERABOVE")
-        #target.tofile(file)
         for ch in text:
             for i in range(0, 26):
                 if ch == huff[i][0]:
@@ -69,31 +67,11 @@ def compress(target):
         sys.exit(0) # quit Python
 
 
-comp_text = ""
-append_count = 0
-byte = ""
-data = array.array('B')
-print huff[0][1]
-for ch in text:
-    for i in range(0, 26):
-        if ch == huff[i][0]:
-            #file.write(huff[i][1].rstrip('\n').lstrip())
-            comp_text = comp_text + huff[i][1]
-
-            
-#print data
-
-for ch in comp_text:
-    byte = byte + ch
-    append_count += 1
-    if append_count % 8 == 0:
-        data.append(int(byte, 2))
-        byte=""
-
-compress(data)
+compress()
 
 
 def decompress():
+    print "Generating ascii_decompressed.txt\n"
     decomp_keys = {}
     inter_key_split = []
     compressed_file = open("ascii_compressed.txt")
@@ -109,16 +87,12 @@ def decompress():
 
     for x in range(0, 26):
         inter_key_split.append(header.split(';')[x])
-    print inter_key_split
+    #print inter_key_split
 
     for entry in inter_key_split:
         decomp_keys[entry.split('-')[1]] = entry.split('-')[0]
 
-    #for lines in header:
-        #decomp_keys[lines.split('-')[0]] = lines.split('-')[1]
-        #print lines
-
-    print decomp_keys
+    #print decomp_keys
 
     compression = compression.split('HUFFMANCOMPRESSIONHEADERABOVE')[1]
 
