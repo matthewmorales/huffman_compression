@@ -51,16 +51,46 @@ print node
 #   assigning a code value to each symbol
 def walk_tree(node, prefix="", code={}):
 	for value in freq:
+		code[value] = None
 		curr_branch = node
+		if curr_branch[1].children() != None:
+			### check left right, go whichever is available
+
+
+	print code
+
+
+	tree = Queue.PriorityQueue
+	tree.put(node)
+
+	while tree.qsize() > 0:
+		tree.put(node[1].children)
+
+
+
+	
+
+
+
+
+
+
+
 		#print curr_branch[1].left
 		#print node[1].right
-		while curr_branch[1].children:  #fix this, check for children first
+		#while curr_branch[1].children:  #fix this, check for children first
 			#go right if there is still a branch on the right append a 1 for each right step
-			if isinstance(curr_branch[1].right[1], basestring):
+		#	if isinstance(curr_branch[1].right[1], basestring):
 				# also append 1 here to code and associate w/ printed symbol below
-				print curr_branch[1].right[1]
-			else:
-				curr_branch = curr_branch[1].right
+		#		print curr_branch[1].right
+		#		curr_branch[1].right = None
+		#		print curr_branch[1].right
+		#		curr_branch = curr_branch[1].right[1]
+
+				#curr_branch[1].right
+		#	elif not isinstance(curr_branch[1].right[1], basestring):
+		#		curr_branch = curr_branch[1].right
+
 				#append 1 here
 	return(code)
 
