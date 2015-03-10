@@ -2,7 +2,6 @@ from heapq import heappush, heappop, heapify
 from collections import defaultdict
 import sys
 import array
-import binascii
 
 def encode(charquantity):
     heap = [[weight, [character, ""]] for character, weight in charquantity.items()]
@@ -25,9 +24,9 @@ charquantity = defaultdict(int)
 for ch in text:
     charquantity[ch] += 1
 
-huff = encode(charquantity)
+huff_encode = encode(charquantity)
 print "Symbol\tWeight\tHuffman Code"
-for entry in huff:
+for entry in huff_encode:
     print "%s\t%s\t%s" % (entry[0], charquantity[entry[0]], entry[1])
 print "****************************\n"
 
@@ -44,13 +43,13 @@ def compress():
 
     try:
         file = open(name,'wb')   # Trying to create a new file or open one
-        for p in huff:
+        for p in huff_encode:
             file.write("%s-%s;" % (p[0], p[1]))
         file.write("HUFFMANCOMPRESSIONHEADERABOVE")
         for ch in text:
             for i in range(0, 26):
-                if ch == huff[i][0]:
-                    byte_split = byte_split + huff[i][1]
+                if ch == huff_encode[i][0]:
+                    byte_split = byte_split + huff_encode[i][1]
         for ch in byte_split:
             temp_byte = temp_byte + ch
             append_count += 1
@@ -116,11 +115,5 @@ def decompress():
     except:
         print('File Creation Failed')
         sys.exit(0) # quit Python
-
-            
-
-
-
-
 
 decompress()
